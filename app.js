@@ -5,7 +5,7 @@ const authRoutes = require('./routes/authRoutes')
 dotenv.config()
 const app = express();
 const cookieParser = require('cookie-parser')
-const { requireAuth } = require('./middleware/authMiddleware');
+const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 // middleware
 app.use(express.static('public'));
 app.use(express.json())
@@ -25,6 +25,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true})
   .catch((err) => console.log(err));
 
 // routes
+app.get('*' , checkUser)
 app.get('/', (req, res) => res.render('home'));
 app.get('/smoothies',requireAuth ,(req, res) => res.render('smoothies'));
 app.use(authRoutes)
